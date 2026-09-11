@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MediKiosk - Language Selection</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#dae2fd",
+                        "surface": "#faf8ff",
+                        "on-secondary-fixed": "#00201d",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "surface-container": "#eaedff",
+                        "on-surface-variant": "#444651",
+                        "surface-bright": "#faf8ff",
+                        "on-background": "#131b2e",
+                        "on-surface": "#131b2e",
+                        "on-primary-container": "#90a8ff",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-tertiary-container": "#aaadaf",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "primary-fixed": "#dce1ff",
+                        "tertiary": "#272b2d",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary-fixed": "#89f5e7",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary": "#006a61",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-tint": "#4059aa",
+                        "outline-variant": "#c5c5d3",
+                        "inverse-on-surface": "#eef0ff",
+                        "inverse-surface": "#283044",
+                        "primary-container": "#1e3a8a",
+                        "primary": "#00236f",
+                        "on-secondary-container": "#006f66",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#264191",
+                        "surface-container-high": "#e2e7ff",
+                        "on-primary-fixed": "#00164e",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#86f2e4",
+                        "surface-variant": "#dae2fd",
+                        "tertiary-container": "#3d4143",
+                        "inverse-primary": "#b6c4ff",
+                        "surface-dim": "#d2d9f4",
+                        "outline": "#757682",
+                        "on-error": "#ffffff",
+                        "background": "#faf8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "touch-target-min": "64px",
+                        "stack-lg": "48px",
+                        "margin-page": "40px",
+                        "gutter": "24px",
+                        "stack-sm": "12px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-xl": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["56px", { "lineHeight": "68px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["20px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-lg": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "42px", "fontWeight": "700" }],
+                        "label-xl": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "body-lg": ["24px", { "lineHeight": "36px", "fontWeight": "500" }],
+                        "headline-lg": ["40px", { "lineHeight": "52px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Hide scrollbar for a cleaner kiosk look */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col pt-[80px] pb-[100px]">
+    <!-- TopAppBar -->
+    <header
+        class="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest border-b-2 border-outline-variant flex justify-between items-center px-margin-page h-[80px]">
+        <div class="font-headline-md text-headline-md font-bold text-primary">
+            National Hospital OPD
+        </div>
+        <div class="flex items-center gap-gutter text-primary">
+            <button
+                class="h-touch-target-min w-touch-target-min flex items-center justify-center hover:bg-surface-container-high transition-colors rounded-full active:scale-95 duration-100 touch-none">
+                <span class="material-symbols-outlined text-[32px]">emergency_home</span>
+            </button>
+            <button
+                class="h-touch-target-min w-touch-target-min flex items-center justify-center hover:bg-surface-container-high transition-colors rounded-full active:scale-95 duration-100 touch-none">
+                <span class="material-symbols-outlined text-[32px]">account_balance_wallet</span>
+            </button>
+        </div>
+    </header>
+    <!-- SideNavBar (Assistant) -->
+    <nav
+        class="fixed right-margin-page top-[100px] flex flex-col gap-stack-md z-40 bg-surface-container rounded-xl p-4 border-2 border-primary w-[240px]">
+        <div class="mb-4">
+            <h2 class="font-headline-md text-[24px] text-primary font-bold">सहायक / Assistant</h2>
+            <p class="font-label-lg text-label-lg text-on-surface-variant">Audio Guidance On</p>
+        </div>
+        <button
+            class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-lg p-4 w-full h-touch-target-min hover:bg-surface-container-highest transition-all active:scale-98 duration-150 border-2 border-transparent focus:border-primary">
+            <span class="material-symbols-outlined text-[28px]"
+                style="font-variation-settings: 'FILL' 1;">volume_up</span>
+            <span class="font-label-xl text-label-xl">सुनिए / Listen</span>
+        </button>
+        <button
+            class="flex items-center gap-4 text-on-surface-variant p-4 w-full h-touch-target-min hover:bg-surface-container-highest transition-all rounded-lg active:scale-98 duration-150 border-2 border-transparent focus:border-primary">
+            <span class="material-symbols-outlined text-[28px]">graphic_eq</span>
+            <span class="font-label-xl text-label-xl">आवाज़ / Voice</span>
+        </button>
+    </nav>
+    <!-- Main Content Canvas -->
+    <main class="flex-grow flex flex-col items-center justify-center px-margin-page py-stack-lg pr-[300px]">
+        <!-- Welcome Section -->
+        <div class="text-center mb-stack-lg w-full max-w-4xl relative">
+            <div
+                class="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center h-32 -top-4">
+                <!-- STITCH_SHADER_START:ANIMATION_3 class="w-full h-full" -->
+                <div class="w-full h-full" style="display:block;">
+                    <canvas id="shader-canvas-ANIMATION_3" style="display:block;width:100%;height:100%"></canvas>
+                    <script>
+                            (function () {
+                                const canvas = document.getElementById('shader-canvas-ANIMATION_3');
+
+                                // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+                                // This fires on initial layout and whenever the element is resized.
+                                function syncSize() {
+                                    const w = canvas.clientWidth || 1280;
+                                    const h = canvas.clientHeight || 720;
+                                    if (canvas.width !== w || canvas.height !== h) {
+                                        canvas.width = w;
+                                        canvas.height = h;
+                                    }
+                                }
+                                if (typeof ResizeObserver !== 'undefined') {
+                                    new ResizeObserver(syncSize).observe(canvas);
+                                }
+                                syncSize();
+
+                                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                                if (!gl) return;
+                                const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+                                const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    float wave = sin(uv.x * 20.0 + u_time * 5.0) * 0.1;
+    float dist = abs(uv.y - 0.5 + wave);
+    float glow = 0.05 / dist;
+    
+    vec3 color = vec3(0.05, 0.58, 0.53); // Teal #0D9488 normalized
+    color *= glow;
+    
+    // Fade out edges
+    float mask = smoothstep(0.0, 0.2, uv.x) * smoothstep(1.0, 0.8, uv.x);
+    gl_FragColor = vec4(color * mask, 1.0);
+}`;
+                                function cs(type, src) {
+                                    const s = gl.createShader(type);
+                                    gl.shaderSource(s, src);
+                                    gl.compileShader(s);
+                                    return s;
+                                }
+                                const prog = gl.createProgram();
+                                gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+                                gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+                                gl.linkProgram(prog);
+                                gl.useProgram(prog);
+                                const buf = gl.createBuffer();
+                                gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+                                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+                                const pos = gl.getAttribLocation(prog, 'a_position');
+                                gl.enableVertexAttribArray(pos);
+                                gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+                                const uTime = gl.getUniformLocation(prog, 'u_time');
+                                const uRes = gl.getUniformLocation(prog, 'u_resolution');
+                                const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+                                // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+                                // Shaders that need normalized coords should use: u_mouse / u_resolution.
+                                let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+                                window.addEventListener('mousemove', (event) => {
+                                    const rect = canvas.getBoundingClientRect();
+                                    if (rect.width && rect.height) {
+                                        const nx = (event.clientX - rect.left) / rect.width;
+                                        const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+                                        mouse.x = nx * canvas.width;
+                                        mouse.y = ny * canvas.height;
+                                    }
+                                });
+
+                                function render(t) {
+                                    if (typeof ResizeObserver === 'undefined') syncSize();
+                                    gl.viewport(0, 0, canvas.width, canvas.height);
+                                    if (uTime) gl.uniform1f(uTime, t * 0.001);
+                                    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+                                    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+                                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                                    requestAnimationFrame(render);
+                                }
+                                render(0);
+                            })();
+                    </script>
+                </div>
+                <!-- STITCH_SHADER_END:ANIMATION_3 -->
+            </div>
+            <h1 class="font-display-lg text-display-lg text-primary mb-stack-md relative z-10 drop-shadow-sm">
+                Welcome to MediKiosk<br />
+                मेडिकियोस्क में आपका स्वागत है
+            </h1>
+            <p
+                class="font-headline-md text-headline-md text-on-surface-variant flex items-center justify-center gap-2 relative z-10">
+                <span class="material-symbols-outlined text-primary text-[40px] animate-pulse">mic</span>
+                Tap a language or speak to begin
+            </p>
+        </div>
+        <!-- Language Grid -->
+        <div class="grid grid-cols-2 gap-stack-md w-full max-w-4xl z-10">
+            <!-- English -->
+            <button
+                class="bg-surface-container-lowest border-2 border-outline-variant hover:border-primary focus:border-[4px] focus:border-primary rounded-xl p-6 h-[160px] flex items-center justify-between transition-all hover:bg-surface-container hover:shadow-md active:scale-[0.98]">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-[32px]">
+                        🇬🇧</div>
+                    <span class="font-headline-lg text-headline-lg text-on-surface">English</span>
+                </div>
+                <span
+                    class="material-symbols-outlined text-[48px] text-primary bg-primary-container/10 p-3 rounded-full">volume_up</span>
+            </button>
+            <!-- Hindi -->
+            <button
+                class="bg-surface-container-lowest border-2 border-outline-variant hover:border-primary focus:border-[4px] focus:border-primary rounded-xl p-6 h-[160px] flex items-center justify-between transition-all hover:bg-surface-container hover:shadow-md active:scale-[0.98]">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-[32px]">
+                        🇮🇳</div>
+                    <span class="font-headline-lg text-headline-lg text-on-surface">हिन्दी</span>
+                </div>
+                <span
+                    class="material-symbols-outlined text-[48px] text-primary bg-primary-container/10 p-3 rounded-full">volume_up</span>
+            </button>
+            <!-- Bengali -->
+            <button
+                class="bg-surface-container-lowest border-2 border-outline-variant hover:border-primary focus:border-[4px] focus:border-primary rounded-xl p-6 h-[160px] flex items-center justify-between transition-all hover:bg-surface-container hover:shadow-md active:scale-[0.98]">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-[32px]">
+                        🇮🇳</div>
+                    <span class="font-headline-lg text-headline-lg text-on-surface">বাংলা</span>
+                </div>
+                <span
+                    class="material-symbols-outlined text-[48px] text-primary bg-primary-container/10 p-3 rounded-full">volume_up</span>
+            </button>
+            <!-- Tamil -->
+            <button
+                class="bg-surface-container-lowest border-2 border-outline-variant hover:border-primary focus:border-[4px] focus:border-primary rounded-xl p-6 h-[160px] flex items-center justify-between transition-all hover:bg-surface-container hover:shadow-md active:scale-[0.98]">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-[32px]">
+                        🇮🇳</div>
+                    <span class="font-headline-lg text-headline-lg text-on-surface">தமிழ்</span>
+                </div>
+                <span
+                    class="material-symbols-outlined text-[48px] text-primary bg-primary-container/10 p-3 rounded-full">volume_up</span>
+            </button>
+            <!-- Telugu -->
+            <button
+                class="bg-surface-container-lowest border-2 border-outline-variant hover:border-primary focus:border-[4px] focus:border-primary rounded-xl p-6 h-[160px] flex items-center justify-between transition-all hover:bg-surface-container hover:shadow-md active:scale-[0.98]">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-[32px]">
+                        🇮🇳</div>
+                    <span class="font-headline-lg text-headline-lg text-on-surface">తెలుగు</span>
+                </div>
+                <span
+                    class="material-symbols-outlined text-[48px] text-primary bg-primary-container/10 p-3 rounded-full">volume_up</span>
+            </button>
+            <!-- Marathi -->
+            <button
+                class="bg-surface-container-lowest border-2 border-outline-variant hover:border-primary focus:border-[4px] focus:border-primary rounded-xl p-6 h-[160px] flex items-center justify-between transition-all hover:bg-surface-container hover:shadow-md active:scale-[0.98]">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-[32px]">
+                        🇮🇳</div>
+                    <span class="font-headline-lg text-headline-lg text-on-surface">मराठी</span>
+                </div>
+                <span
+                    class="material-symbols-outlined text-[48px] text-primary bg-primary-container/10 p-3 rounded-full">volume_up</span>
+            </button>
+        </div>
+    </main>
+    <!-- BottomNavBar -->
+    <nav
+        class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-stretch h-[100px] px-margin-page bg-primary border-t-4 border-secondary">
+        <button
+            class="text-on-primary h-touch-target-min flex flex-col items-center justify-center min-w-[120px] hover:bg-primary-container hover:text-on-primary-container transition-all active:ring-4 active:ring-secondary-fixed duration-75 h-full px-6">
+            <span class="material-symbols-outlined text-[32px] mb-1">arrow_back</span>
+            <span class="font-label-xl text-label-xl">वापस / Back</span>
+        </button>
+        <button
+            class="text-on-primary h-touch-target-min flex flex-col items-center justify-center min-w-[120px] hover:bg-primary-container hover:text-on-primary-container transition-all active:ring-4 active:ring-secondary-fixed duration-75 h-full px-6">
+            <span class="material-symbols-outlined text-[32px] mb-1">call</span>
+            <span class="font-label-xl text-label-xl">सहायता / Help</span>
+        </button>
+        <button
+            class="text-on-primary h-touch-target-min flex flex-col items-center justify-center min-w-[120px] hover:bg-primary-container hover:text-on-primary-container transition-all active:ring-4 active:ring-secondary-fixed duration-75 h-full px-6">
+            <span class="material-symbols-outlined text-[32px] mb-1">close</span>
+            <span class="font-label-xl text-label-xl">रद्द करें / Cancel</span>
+        </button>
+    </nav>
+</body>
+
+</html>

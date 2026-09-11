@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>National Hospital OPD - Patient Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#dae2fd",
+                      "surface": "#faf8ff",
+                      "on-secondary-fixed": "#00201d",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-low": "#f2f3ff",
+                      "on-secondary-fixed-variant": "#005049",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "surface-container": "#eaedff",
+                      "on-surface-variant": "#444651",
+                      "surface-bright": "#faf8ff",
+                      "on-background": "#131b2e",
+                      "on-surface": "#131b2e",
+                      "on-primary-container": "#90a8ff",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#6bd8cb",
+                      "on-tertiary-container": "#aaadaf",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "primary-fixed": "#dce1ff",
+                      "tertiary": "#272b2d",
+                      "on-tertiary-fixed": "#191c1e",
+                      "secondary-fixed": "#89f5e7",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "secondary": "#006a61",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "tertiary-fixed": "#e0e3e5",
+                      "surface-tint": "#4059aa",
+                      "outline-variant": "#c5c5d3",
+                      "inverse-on-surface": "#eef0ff",
+                      "inverse-surface": "#283044",
+                      "primary-container": "#1e3a8a",
+                      "primary": "#00236f",
+                      "on-secondary-container": "#006f66",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed-variant": "#264191",
+                      "surface-container-high": "#e2e7ff",
+                      "on-primary-fixed": "#00164e",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#86f2e4",
+                      "surface-variant": "#dae2fd",
+                      "tertiary-container": "#3d4143",
+                      "inverse-primary": "#b6c4ff",
+                      "surface-dim": "#d2d9f4",
+                      "outline": "#757682",
+                      "on-error": "#ffffff",
+                      "background": "#faf8ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "24px",
+                      "touch-target-min": "64px",
+                      "stack-lg": "48px",
+                      "margin-page": "40px",
+                      "gutter": "24px",
+                      "stack-sm": "12px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "label-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "label-xl": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["56px", {"lineHeight": "68px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-md": ["20px", {"lineHeight": "30px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "label-lg": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "headline-md": ["32px", {"lineHeight": "42px", "fontWeight": "700"}],
+                      "label-xl": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "body-lg": ["24px", {"lineHeight": "36px", "fontWeight": "500"}],
+                      "headline-lg": ["40px", {"lineHeight": "52px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            /* Prevent overscroll on kiosks */
+            overscroll-behavior-y: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen flex flex-col overflow-hidden font-sans">
+<!-- TopAppBar (Hidden on strictly linear flows, but requested in prompt. Adapting for a safe destination flow) -->
+<header class="bg-surface-container-lowest text-primary flex justify-between items-center w-full px-margin-page h-[80px] border-b-2 border-outline-variant flat no shadows z-50 shrink-0">
+<div class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-4">
+<span class="material-symbols-outlined filled-icon text-[40px]">local_hospital</span>
+            National Hospital OPD
+        </div>
+<div class="flex gap-6 items-center">
+<!-- Audio Guidance Button from Style Guidance -->
+<button class="bg-primary text-on-primary rounded-full px-6 py-3 flex items-center gap-3 active:scale-95 transition-transform duration-150 touch-none shadow-md">
+<span class="material-symbols-outlined">volume_up</span>
+<span class="font-label-lg text-label-lg">सुनिए / Listen</span>
+</button>
+<div class="flex gap-4">
+<button aria-label="Home" class="text-primary p-3 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-100 touch-none">
+<span class="material-symbols-outlined filled-icon text-[32px]">emergency_home</span>
+</button>
+<button aria-label="Wallet" class="text-primary p-3 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-100 touch-none">
+<span class="material-symbols-outlined filled-icon text-[32px]">account_balance_wallet</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-margin-page py-stack-md flex flex-col gap-stack-md pb-[120px]">
+<!-- Instruction Pill -->
+<div class="flex justify-center w-full mb-4">
+<div class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-full font-label-xl text-label-xl flex items-center gap-4 shadow-sm border-2 border-secondary/20">
+<span class="material-symbols-outlined filled-icon text-[28px]">info</span>
+                Scan your card or enter your number
+            </div>
+</div>
+<!-- Bento Grid Layout for the 3 sections -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-stack-lg h-full max-h-[800px]">
+<!-- Section 1: Scan ABHA Card -->
+<div class="bg-surface-container-lowest rounded-xl border-2 border-outline-variant p-stack-md flex flex-col gap-stack-md h-full relative overflow-hidden shadow-sm active:border-primary active:border-4 transition-all focus-within:border-primary focus-within:border-4">
+<div class="flex items-center gap-4 border-b-2 border-outline-variant pb-4">
+<span class="material-symbols-outlined text-[40px] text-primary">qr_code_scanner</span>
+<h2 class="font-headline-md text-headline-md text-primary">Scan ABHA Card / QR Code</h2>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center relative rounded-lg border-4 border-dashed border-outline-variant bg-surface-container-low p-4">
+<p class="font-body-lg text-body-lg text-on-surface-variant text-center mb-8 max-w-sm">
+                        Hold your ABHA Card or QR code steady in front of the scanner below.
+                     </p>
+<!-- Visual Scanning Frame Mockup -->
+<div class="w-64 h-64 border-4 border-primary rounded-xl relative flex items-center justify-center bg-white shadow-inner">
+<div class="absolute w-full h-1 bg-secondary animate-pulse opacity-80" style="top: 50%; box-shadow: 0 0 10px #006a61;"></div>
+<span class="material-symbols-outlined text-outline-variant text-[120px] opacity-20">badge</span>
+<!-- Corner markers -->
+<div class="absolute top-[-4px] left-[-4px] w-8 h-8 border-t-8 border-l-8 border-primary rounded-tl-xl"></div>
+<div class="absolute top-[-4px] right-[-4px] w-8 h-8 border-t-8 border-r-8 border-primary rounded-tr-xl"></div>
+<div class="absolute bottom-[-4px] left-[-4px] w-8 h-8 border-b-8 border-l-8 border-primary rounded-bl-xl"></div>
+<div class="absolute bottom-[-4px] right-[-4px] w-8 h-8 border-b-8 border-r-8 border-primary rounded-br-xl"></div>
+</div>
+</div>
+</div>
+<!-- Right Column for Input & Registration -->
+<div class="flex flex-col gap-stack-lg h-full">
+<!-- Section 2: Enter Number -->
+<div class="bg-surface-container-lowest rounded-xl border-2 border-outline-variant p-stack-md flex flex-col gap-stack-md flex-1 shadow-sm focus-within:border-primary focus-within:border-4 transition-all">
+<div class="flex items-center gap-4 border-b-2 border-outline-variant pb-4">
+<span class="material-symbols-outlined text-[40px] text-primary">dialpad</span>
+<h2 class="font-headline-md text-headline-md text-primary">Enter ABHA / Mobile Number</h2>
+</div>
+<!-- Input Field -->
+<div class="relative w-full">
+<input class="w-full h-touch-target-min border-2 border-outline-variant rounded-lg px-6 font-headline-md text-headline-md text-on-surface focus:border-4 focus:border-primary focus:ring-0 transition-all bg-surface" placeholder="14-digit ABHA or 10-digit Mobile" readonly="" type="text" value=""/>
+<button class="absolute right-4 top-1/2 transform -translate-y-1/2 text-error p-3 rounded-full hover:bg-error-container active:bg-error active:text-on-error transition-colors h-14 w-14 flex items-center justify-center">
+<span class="material-symbols-outlined filled-icon text-[32px]">backspace</span>
+</button>
+</div>
+<!-- On-Screen Numpad -->
+<div class="grid grid-cols-3 gap-4 flex-1">
+<!-- Row 1 -->
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">1</button>
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">2</button>
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">3</button>
+<!-- Row 2 -->
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">4</button>
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">5</button>
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">6</button>
+<!-- Row 3 -->
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">7</button>
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">8</button>
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">9</button>
+<!-- Row 4 -->
+<button class="bg-surface-container hover:bg-surface-container-high active:bg-primary-container active:text-on-primary-container active:scale-95 transition-all rounded-lg h-[80px] font-headline-lg text-headline-lg text-primary flex items-center justify-center border-2 border-transparent shadow-sm touch-none col-start-2">0</button>
+<button class="bg-secondary hover:bg-secondary-container active:bg-secondary active:text-on-secondary active:scale-95 transition-all rounded-lg h-[80px] text-on-secondary flex items-center justify-center border-2 border-transparent shadow-sm touch-none">
+<span class="material-symbols-outlined filled-icon text-[40px]">check_circle</span>
+</button>
+</div>
+</div>
+<!-- Section 3: New Registration -->
+<button class="w-full bg-primary-container text-on-primary-container h-[100px] rounded-xl flex items-center justify-center gap-4 font-headline-md text-headline-md border-2 border-outline-variant shadow-sm active:scale-95 active:border-primary active:border-4 transition-all touch-none">
+<span class="material-symbols-outlined filled-icon text-[40px]">person_add</span>
+                    New Registration
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-stretch h-[100px] px-margin-page bg-primary border-t-4 border-secondary">
+<!-- Back Button -->
+<button class="text-on-primary h-touch-target-min flex flex-col items-center justify-center min-w-[120px] hover:bg-primary-container hover:text-on-primary-container transition-all active:ring-4 active:ring-secondary-fixed duration-75 mt-auto mb-auto py-2 rounded-lg">
+<span class="material-symbols-outlined text-[32px]">arrow_back</span>
+<span class="font-label-xl text-label-xl mt-1">वापस / Back</span>
+</button>
+<!-- Help Button -->
+<button class="text-on-primary h-touch-target-min flex flex-col items-center justify-center min-w-[120px] hover:bg-primary-container hover:text-on-primary-container transition-all active:ring-4 active:ring-secondary-fixed duration-75 mt-auto mb-auto py-2 rounded-lg">
+<span class="material-symbols-outlined text-[32px]">call</span>
+<span class="font-label-xl text-label-xl mt-1">सहायता / Help</span>
+</button>
+<!-- Cancel Button -->
+<button class="text-on-primary h-touch-target-min flex flex-col items-center justify-center min-w-[120px] hover:bg-primary-container hover:text-on-primary-container transition-all active:ring-4 active:ring-secondary-fixed duration-75 mt-auto mb-auto py-2 rounded-lg">
+<span class="material-symbols-outlined text-[32px]">close</span>
+<span class="font-label-xl text-label-xl mt-1">रद्द करें / Cancel</span>
+</button>
+</nav>
+</body></html>
