@@ -1,89 +1,170 @@
+import { InterviewResponse, ClinicalSummary } from '@/types';
+
+const API_BASE = 'http://localhost:8000';
+
 export interface ChatMessage {
   role: 'assistant' | 'user';
   content: string;
 }
 
-export interface AiResponse {
-  type: 'question' | 'done';
-  question: string;
-  language: string;
-}
+// ============================================================
+// Interview API (State Machine)
+// ============================================================
 
-export const fetchNextQuestion = async (messages: ChatMessage[], language: string = 'en'): Promise<AiResponse> => {
+export const submitInterviewAnswer = async (
+  sessionLanguage: string,
+  currentQuestionId: string,
+  latestAnswer: string,
+  structuredAnswers: Record<string, string>,
+  conversationHistory: ChatMessage[],
+  chiefComplaint: string
+): Promise<InterviewResponse> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
   try {
-    const res = await fetch('http://localhost:8000/api/chat', {
+    const res = await fetch(`${API_BASE}/api/interview`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, language }),
+      body: JSON.stringify({
+        sessionLanguage,
+        currentQuestionId,
+        latestAnswer,
+        structuredAnswers,
+        conversationHistory,
+        chiefComplaint,
+      }),
+      signal: controller.signal,
     });
-    if (!res.ok) throw new Error('API server returned error');
-    const data = await res.json();
-    return data as AiResponse;
-  } catch (e) {
-    console.warn('Backend API unavailable, using fallback client responses', e);
-    const lastUserMessage = messages[messages.length - 1]?.content.toLowerCase() || '';
-    if (messages.length > 5) return { type: 'done', question: '', language };
-    
-    if (lastUserMessage.includes('fever') || lastUserMessage.includes('बुखार')) {
-      return { 
-        type: 'question', 
-        question: language === 'hi' ? 'आपको यह बुखार कितने दिनों से है?' : 'How long have you had this fever, and what is your temperature?', 
-        language 
-      };
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errorText = await res.text().catch(() => 'Unknown error');
+      throw new Error(`Interview API error (${res.status}): ${errorText}`);
     }
-    return { 
-      type: 'question', 
-      question: language === 'hi' ? 'आपके यह लक्षण कब से हैं और दर्द कितना है?' : 'How long have you had these symptoms, and how severe is the pain on a scale of 1 to 10?', 
-      language 
+
+    const data: InterviewResponse = await res.json();
+    return data;
+  } catch (e: any) {
+    clearTimeout(timeoutId);
+    if (e.name === 'AbortError') {
+      throw new Error('Interview request timed out. Please try again.');
+    }
+    throw e;
+  }
+};
+
+// ============================================================
+// Summary API
+// ============================================================
+
+export const generateSummaryApi = async (
+  sessionLanguage: string,
+  structuredAnswers: Record<string, string>,
+  conversationHistory: ChatMessage[]
+): Promise<ClinicalSummary> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/summary`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionLanguage,
+        structuredAnswers,
+        conversationHistory,
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      throw new Error(`Summary API error (${res.status})`);
+    }
+
+    const data = await res.json();
+    return data.summary as ClinicalSummary;
+  } catch (e: any) {
+    clearTimeout(timeoutId);
+    console.error('[ClinicalAPI] Summary generation failed:', e);
+    // Return a fallback summary from structured answers
+    const nr = sessionLanguage === 'hi' ? 'जानकारी नहीं दी गई' : 'Not reported';
+    return {
+      chiefComplaint: structuredAnswers.chief_complaint || nr,
+      location: structuredAnswers.location || nr,
+      onset: structuredAnswers.onset || nr,
+      duration: structuredAnswers.duration || nr,
+      severity: structuredAnswers.severity || nr,
+      aggravatingRelievingFactors: structuredAnswers.aggravating_relieving || nr,
+      associatedSymptoms: structuredAnswers.associated_symptoms || nr,
+      pastMedicalHistory: structuredAnswers.past_history || nr,
+      medications: structuredAnswers.medications_allergies || nr,
+      allergies: nr,
+      additionalInformation: structuredAnswers.additional_information || nr,
     };
   }
 };
 
-export const generateSummaryApi = async (messages: ChatMessage[]): Promise<string> => {
-  try {
-    const res = await fetch('http://localhost:8000/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages }),
-    });
-    if (!res.ok) throw new Error('API server returned error');
-    const data = await res.json();
-    return data.summary;
-  } catch (e) {
-    console.warn('Backend API unavailable, using fallback summary generator', e);
-    const userAnswers = messages.filter((m) => m.role === 'user').map((m) => m.content).join(' | ');
-    return JSON.stringify({
-      chiefComplaint: userAnswers || 'Fever and Generalized Body Ache',
-      duration: '2-3 Days',
-      painScale: 6,
-      triageCategory: 'Yellow (Urgent Care)',
-      recommendedDepartment: 'General Medicine',
-      suggestedAction: 'Consulting Physician',
-      clinicalNotes: 'Patient presented with self-reported acute symptoms. Vital check advised upon OPD entry.',
-    });
-  }
-};
+// ============================================================
+// Transcription API
+// ============================================================
 
-export const transcribeAudioApi = async (audioBlob: Blob): Promise<string> => {
+export interface TranscriptionResult {
+  text: string;
+  detectedLanguage: string;
+}
+
+export const transcribeAudioApi = async (audioBlob: Blob): Promise<TranscriptionResult> => {
+  const formData = new FormData();
+  let ext = 'webm';
+  if (audioBlob.type.includes('mp4')) ext = 'mp4';
+  else if (audioBlob.type.includes('ogg')) ext = 'ogg';
+  formData.append('file', audioBlob, `audio.${ext}`);
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 180000); // Increased to 180s for slow CPU transcription
+
   try {
-    const formData = new FormData();
-    formData.append('file', audioBlob, 'audio.webm');
-    
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-    
-    const res = await fetch('http://localhost:8000/api/transcribe', {
+    const res = await fetch(`${API_BASE}/api/transcribe`, {
       method: 'POST',
       body: formData,
       signal: controller.signal,
     });
-    
+
     clearTimeout(timeoutId);
-    if (!res.ok) throw new Error('API server returned error during transcription');
+
+    if (!res.ok) {
+      throw new Error(`Transcription API error (${res.status})`);
+    }
+
     const data = await res.json();
-    return data.text;
-  } catch (e) {
-    console.warn('Transcription API unavailable', e);
+    return {
+      text: data.text || '',
+      detectedLanguage: data.detectedLanguage || 'en',
+    };
+  } catch (e: any) {
+    clearTimeout(timeoutId);
+    if (e.name === 'AbortError') {
+      throw new Error('Transcription timed out. Please try again.');
+    }
     throw e;
+  }
+};
+
+// ============================================================
+// Health Check API
+// ============================================================
+
+export const checkApiHealth = async (): Promise<{ ollama: boolean; whisper: boolean }> => {
+  try {
+    const res = await fetch(`${API_BASE}/api/health`, { method: 'GET' });
+    if (!res.ok) return { ollama: false, whisper: false };
+    const data = await res.json();
+    return { ollama: data.ollama, whisper: data.whisper };
+  } catch {
+    return { ollama: false, whisper: false };
   }
 };

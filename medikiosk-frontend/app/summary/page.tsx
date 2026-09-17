@@ -1,43 +1,77 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePatientStore } from '@/store/usePatientStore';
 import { BottomNavBar } from '@/components/BottomNavBar';
-import { speakText } from '@/services/speech';
+import { speakText, getTTSLang } from '@/services/speech';
+
+// Labels for each clinical category in both languages
+const SUMMARY_LABELS: Record<string, { en: string; hi: string }> = {
+  chiefComplaint: { en: 'Chief Complaint', hi: 'मुख्य शिकायत' },
+  location: { en: 'Location', hi: 'स्थान' },
+  onset: { en: 'Onset', hi: 'शुरुआत' },
+  duration: { en: 'Duration', hi: 'अवधि' },
+  severity: { en: 'Severity', hi: 'गंभीरता' },
+  aggravatingRelievingFactors: { en: 'Aggravating / Relieving Factors', hi: 'बढ़ाने / कम करने वाले कारक' },
+  associatedSymptoms: { en: 'Associated Symptoms', hi: 'संबंधित लक्षण' },
+  pastMedicalHistory: { en: 'Past Medical History', hi: 'पिछला चिकित्सा इतिहास' },
+  medications: { en: 'Current Medications', hi: 'वर्तमान दवाइयाँ' },
+  allergies: { en: 'Allergies', hi: 'एलर्जी' },
+  additionalInformation: { en: 'Additional Information', hi: 'अतिरिक्त जानकारी' },
+};
+
+const SUMMARY_FIELD_ORDER = [
+  'chiefComplaint', 'location', 'onset', 'duration', 'severity',
+  'aggravatingRelievingFactors', 'associatedSymptoms', 'pastMedicalHistory',
+  'medications', 'allergies', 'additionalInformation',
+];
 
 export default function SummaryPage() {
   const router = useRouter();
-  const { abhaId, patientName, age, gender, department, chiefComplaint, painScale, symptomDuration, language } =
-    usePatientStore();
+  const {
+    abhaId, patientName, age, gender, department,
+    chiefComplaint, language, clinicalSummary, structuredAnswers,
+  } = usePatientStore();
 
-  const [summaryText, setSummaryText] = useState('Loading summary...');
+  const notReported = language === 'hi' ? 'जानकारी नहीं दी गई' : 'Not reported';
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = sessionStorage.getItem('finalSummary');
-      if (stored) {
-        setSummaryText(stored);
-      } else {
-        setSummaryText(
-          JSON.stringify(
-            {
-              chiefComplaint: chiefComplaint || 'Fever and Generalized Body Ache',
-              duration: symptomDuration || '2-3 Days',
-              painScale: painScale || 5,
-              recommendedDepartment: department || 'General Medicine',
-              patientAbha: abhaId,
-            },
-            null,
-            2
-          )
-        );
-      }
+  // Build display data from clinical summary or structured answers
+  const getSummaryValue = (key: string): string => {
+    if (clinicalSummary) {
+      const val = (clinicalSummary as any)[key];
+      if (val && val.trim()) return val;
     }
-  }, [chiefComplaint, symptomDuration, painScale, department, abhaId]);
+    // Fallback to raw structured answers
+    const rawKey = key === 'chiefComplaint' ? 'chief_complaint'
+      : key === 'aggravatingRelievingFactors' ? 'aggravating_relieving'
+      : key === 'associatedSymptoms' ? 'associated_symptoms'
+      : key === 'pastMedicalHistory' ? 'past_history'
+      : key === 'medications' ? 'medications_allergies'
+      : key === 'allergies' ? 'medications_allergies'
+      : key === 'additionalInformation' ? 'additional_information'
+      : key;
+    const rawVal = structuredAnswers[rawKey];
+    return rawVal && rawVal.trim() ? rawVal : notReported;
+  };
 
   const handlePrintToken = () => {
     router.push('/documents');
+  };
+
+  const handleSpeakSummary = () => {
+    const summaryText = SUMMARY_FIELD_ORDER.map(key => {
+      const label = SUMMARY_LABELS[key]?.[language] || key;
+      const value = getSummaryValue(key);
+      return `${label}: ${value}`;
+    }).join('. ');
+    
+    speakText(
+      language === 'hi'
+        ? `${patientName} का सारांश। ${summaryText}`
+        : `Summary for ${patientName}. ${summaryText}`,
+      getTTSLang(language)
+    );
   };
 
   return (
@@ -46,10 +80,12 @@ export default function SummaryPage() {
         {/* Header */}
         <div>
           <h2 className="font-headline-lg text-[32px] font-bold text-on-surface mb-1">
-            Review & Confirm / समीक्षा और पुष्टि करें
+            {language === 'hi' ? 'समीक्षा और पुष्टि करें' : 'Review & Confirm'}
           </h2>
           <p className="font-body-lg text-[20px] text-on-surface-variant">
-            Please check your details before printing the token.
+            {language === 'hi'
+              ? 'कृपया टोकन प्रिंट करने से पहले अपने विवरण जांच लें।'
+              : 'Please check your details before printing the token.'}
           </p>
         </div>
 
@@ -77,22 +113,19 @@ export default function SummaryPage() {
               className="h-[50px] px-6 rounded-lg bg-surface-container-high text-primary font-label-lg text-[16px] font-bold border-2 border-transparent hover:border-primary transition-all flex items-center gap-2 cursor-pointer"
             >
               <span className="material-symbols-outlined">edit</span>
-              Edit Profile
+              {language === 'hi' ? 'प्रोफ़ाइल संपादित करें' : 'Edit Profile'}
             </button>
           </div>
         </div>
 
-        {/* Clinical History & Details Grid */}
+        {/* Clinical History Summary Grid */}
         <div className="bg-surface-container-lowest border-2 border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-4">
           <div className="flex justify-between items-center border-b-2 border-surface-container-highest pb-3">
-            <h4 className="font-headline-md text-[24px] font-bold text-primary">Clinical History Summary</h4>
+            <h4 className="font-headline-md text-[24px] font-bold text-primary">
+              {language === 'hi' ? 'नैदानिक इतिहास सारांश' : 'Clinical History Summary'}
+            </h4>
             <button
-              onClick={() => speakText(
-                language === 'hi' 
-                  ? `${patientName} का सारांश। विभाग: ${department}। शिकायत: ${chiefComplaint}` 
-                  : `Summary for ${patientName}. Department: ${department}. Complaint: ${chiefComplaint}`,
-                language === 'hi' ? 'hi-IN' : 'en-US'
-              )}
+              onClick={handleSpeakSummary}
               className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined">volume_up</span>
@@ -100,50 +133,23 @@ export default function SummaryPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="border border-outline-variant rounded-lg p-4 bg-surface flex flex-col">
-              <span className="font-label-xl text-primary border-b border-surface-container-highest pb-1 mb-2 uppercase text-[14px] font-bold tracking-wider">
-                Chief Complaint / मुख्य शिकायत
-              </span>
-              <p className="font-body-md text-[18px] text-on-surface font-semibold">{chiefComplaint || 'Fever and Cough'}</p>
-            </div>
+            {SUMMARY_FIELD_ORDER.map((key) => {
+              const value = getSummaryValue(key);
+              const label = SUMMARY_LABELS[key]?.[language] || key;
+              const isNotReported = value === notReported;
 
-            <div className="border border-outline-variant rounded-lg p-4 bg-surface flex flex-col">
-              <span className="font-label-xl text-primary border-b border-surface-container-highest pb-1 mb-2 uppercase text-[14px] font-bold tracking-wider">
-                Symptom Duration / लक्षण कितने समय से हैं
-              </span>
-              <p className="font-body-md text-[18px] text-on-surface font-semibold">{symptomDuration || '2-3 Days'}</p>
-            </div>
-
-            <div className="border border-outline-variant rounded-lg p-4 bg-surface flex flex-col">
-              <span className="font-label-xl text-primary border-b border-surface-container-highest pb-1 mb-2 uppercase text-[14px] font-bold tracking-wider">
-                Pain Scale Rating / दर्द की तीव्रता
-              </span>
-              <p className="font-body-md text-[18px] text-on-surface font-semibold">{painScale || 5} / 10</p>
-            </div>
-
-            <div className="border border-outline-variant rounded-lg p-4 bg-surface flex flex-col">
-              <span className="font-label-xl text-primary border-b border-surface-container-highest pb-1 mb-2 uppercase text-[14px] font-bold tracking-wider">
-                Recommended Department / अनुशंसित विभाग
-              </span>
-              <p className="font-body-md text-[18px] text-on-surface font-semibold">{department || 'General Medicine'}</p>
-            </div>
+              return (
+                <div key={key} className="border border-outline-variant rounded-lg p-4 bg-surface flex flex-col">
+                  <span className="font-label-xl text-primary border-b border-surface-container-highest pb-1 mb-2 uppercase text-[14px] font-bold tracking-wider">
+                    {label}
+                  </span>
+                  <p className={`font-body-md text-[18px] font-semibold ${isNotReported ? 'text-on-surface-variant italic' : 'text-on-surface'}`}>
+                    {value}
+                  </p>
+                </div>
+              );
+            })}
           </div>
-        </div>
-
-        {/* Technical FHIR Preview Collapsible */}
-        <div className="bg-surface-container-low border-2 border-outline-variant rounded-xl p-4 shadow-sm font-mono text-sm">
-          <details className="group">
-            <summary className="font-label-lg text-[16px] font-bold text-on-surface-variant uppercase tracking-wider cursor-pointer select-none flex items-center gap-2">
-              <span className="material-symbols-outlined transition-transform group-open:rotate-90">
-                chevron_right
-              </span>
-              <span className="material-symbols-outlined">code</span>
-              FHIR JSON Preview (Technical)
-            </summary>
-            <div className="bg-white p-4 rounded border border-outline-variant mt-3 overflow-x-auto text-on-surface">
-              <pre className="whitespace-pre-wrap break-words">{summaryText}</pre>
-            </div>
-          </details>
         </div>
 
         {/* Primary Action Button */}
@@ -153,12 +159,12 @@ export default function SummaryPage() {
             className="w-full md:w-auto h-[64px] px-12 rounded-xl bg-secondary text-on-secondary font-label-xl text-[22px] font-bold flex items-center justify-center gap-4 hover:brightness-110 active:scale-95 transition-all shadow-md cursor-pointer"
           >
             <span className="material-symbols-outlined text-[32px]">print</span>
-            Confirm & Print OPD Token / टोकन प्रिंट करें
+            {language === 'hi' ? 'पुष्टि करें और टोकन प्रिंट करें' : 'Confirm & Print OPD Token'}
           </button>
         </div>
       </div>
 
-      <BottomNavBar onNext={handlePrintToken} showNext={true} nextText="Print Token / टोकन प्रिंट" />
+      <BottomNavBar onNext={handlePrintToken} showNext={true} nextText={language === 'hi' ? 'टोकन प्रिंट' : 'Print Token'} />
     </>
   );
 }

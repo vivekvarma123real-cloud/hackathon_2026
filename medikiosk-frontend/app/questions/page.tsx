@@ -1,14 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePatientStore } from '@/store/usePatientStore';
 import { BottomNavBar } from '@/components/BottomNavBar';
-import { speakText } from '@/services/speech';
+import { speakText, getTTSLang } from '@/services/speech';
 
 export default function QuestionsPage() {
   const router = useRouter();
-  const { symptomDuration, painScale, setSymptomDuration, setPainScale, language } = usePatientStore();
+  const { symptomDuration, painScale, setSymptomDuration, setPainScale, language, interviewComplete } = usePatientStore();
+
+  // If interview is complete, auto-redirect to summary
+  useEffect(() => {
+    if (interviewComplete) {
+      router.push('/summary');
+    }
+  }, [interviewComplete, router]);
 
   const handleNext = () => {
     router.push('/summary');
@@ -25,7 +32,7 @@ export default function QuestionsPage() {
               <button
                 onClick={() => speakText(
                   language === 'hi' ? 'चिंता का क्षेत्र। छाती और ऊपरी धड़ को हाइलाइट किया गया है।' : 'Area of Concern. Chest and upper torso highlighted.',
-                  language === 'hi' ? 'hi-IN' : 'en-US'
+                  getTTSLang(language)
                 )}
                 className="h-[50px] px-4 rounded-lg bg-primary text-on-primary flex items-center justify-center gap-2 border-2 border-transparent hover:bg-primary-container transition-all cursor-pointer"
               >
@@ -63,7 +70,7 @@ export default function QuestionsPage() {
               <button
                 onClick={() => speakText(
                   language === 'hi' ? 'दर्द कितने समय से है? अवधि चुनें।' : 'How long has it been hurting? Select duration.',
-                  language === 'hi' ? 'hi-IN' : 'en-US'
+                  getTTSLang(language)
                 )}
                 className="h-[50px] px-4 rounded-lg bg-primary text-on-primary flex items-center justify-center gap-2 shrink-0 cursor-pointer"
               >
@@ -102,7 +109,7 @@ export default function QuestionsPage() {
               <button
                 onClick={() => speakText(
                   language === 'hi' ? 'दर्द कितना तेज़ है? एक से दस तक रेट करें।' : 'How bad is the pain? Rate from 1 to 10.',
-                  language === 'hi' ? 'hi-IN' : 'en-US'
+                  getTTSLang(language)
                 )}
                 className="h-[50px] px-4 rounded-lg bg-primary text-on-primary flex items-center justify-center gap-2 shrink-0 cursor-pointer"
               >

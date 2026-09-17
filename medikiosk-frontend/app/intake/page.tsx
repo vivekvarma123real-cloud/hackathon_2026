@@ -7,14 +7,16 @@ import { BottomNavBar } from '@/components/BottomNavBar';
 
 export default function IntakePage() {
   const router = useRouter();
-  const { setDepartment, setChiefComplaint } = usePatientStore();
+  const { setDepartment, setChiefComplaint, resetInterview } = usePatientStore();
 
   const handleSelectDepartment = (deptName: string) => {
+    resetInterview();
     setDepartment(deptName);
     router.push('/voice-input');
   };
 
   const handleStartInterview = (complaint: string) => {
+    resetInterview();
     setChiefComplaint(complaint);
     router.push('/voice-input');
   };
